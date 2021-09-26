@@ -96,9 +96,9 @@ void menu(void)
 				printf("a) El resultado de %d+%d es: %d\n",primerOperando,segundoOperando,suma);
 				printf("b) El resultado de %d-%d es: %d\n",primerOperando,segundoOperando,resta);
 
-				if(division == 0)
+				if(segundoOperando == 0)
 				{
-					printf("No se puede dividir por cero\n");
+					printf("c) No se puede dividir por cero\n");
 				}
 				else
 				{
@@ -200,7 +200,7 @@ float DividirNumeros(int numeroUno, int numeroDos)
 {
 	float resultado;
 
-	if(numeroUno == 0 || numeroDos == 0)
+	if(numeroDos == 0)
 	{
 		resultado = 0;
 	}
