@@ -271,17 +271,17 @@ int sortEmployees(Employee* list, int len, int order)
 				{
 					if
 					(
-						list[i].lastName > list[j].lastName ||
+						strcmp(list[i].lastName, list[j].lastName) > 0 ||
 						(
-							list[i].lastName == list[j].lastName &&
-							list[i].lastName > list[j].lastName
+							strcmp(list[i].lastName, list[j].lastName) == 0 &&
+							list[i].sector > list[j].sector
 						)
 					)
 					{
 						auxiliar = list[i];
-					list[i] = list[j];
-					list[j] = auxiliar;
-					retorno = 0;
+						list[i] = list[j];
+						list[j] = auxiliar;
+						retorno = 0;
 					}
 				}
 
@@ -289,10 +289,10 @@ int sortEmployees(Employee* list, int len, int order)
 				{
 					if
 					(
-						list[i].lastName < list[j].lastName ||
+						strcmp(list[i].lastName, list[j].lastName) < 0 ||
 						(
-							list[i].lastName == list[j].lastName &&
-							list[i].lastName < list[j].lastName
+							strcmp(list[i].lastName, list[j].lastName) == 0 &&
+							list[i].sector < list[j].sector
 						)
 					)
 					{
@@ -347,6 +347,76 @@ int printEmployees(Employee* list, int length)
 
 		}
 		retorno = 0;
+	}
+
+	return retorno;
+}
+
+
+int OrdenarEmpleados(Employee* lista, int tam)
+{
+	int retorno;
+	int orden;
+
+	retorno = 0;
+
+	if(lista != NULL && tam > 0)
+	{
+		printf("\nSeleccione el modo de ordenamiento \n1 - Ascendente\n2 - Descendente\n\n");
+
+		if(utn_PedirEntero(&orden,"Escoja una opcion: ","Opcion incorrecta, ingrese una opcion valida\n",1,2,2) == 1)
+		{
+			sortEmployees(lista, tam, orden);
+			retorno = 1;
+		}
+	}
+
+	return retorno;
+}
+
+int InformarTotalPromedioYSalariosMasAltos(Employee* lista, int tam)
+{
+	int retorno;
+	int contadorSalarios;
+	float total;
+	float promedio;
+	int i;
+
+	contadorSalarios = 0;
+	total = 0;
+	retorno = 0;
+
+	if(lista != NULL && tam > 0)
+	{
+		for(i = 0; i < tam; i++)
+		{
+			if(lista[i].isEmpty == FULL)
+			{
+				total += lista[i].salary;
+				contadorSalarios++;
+			}
+		}
+
+		retorno = -1;
+
+		if(total != 0)
+		{
+			printf("\nEl total de salarios es de : %.2f\n",total);
+			promedio = total / contadorSalarios;
+			printf("El salario promedio es de : %.2f\n",promedio);
+			printf("Los empleados que superan el salario promedio son : \n");
+			printf("N°   | Nombre  \t  \t  \t \t| Apellido\t \t \t   |   Salario  | Sector\n");
+			printf("-----+----------------------------------+----------------------------------+------------+---------\n");
+
+			for(i = 0; i < tam; i++)
+			{
+				if(lista[i].isEmpty == FULL && lista[i].salary > promedio)
+				{
+					MostrarUnEmpleado(lista[i]);
+					retorno = 1;
+				}
+			}
+		}
 	}
 
 	return retorno;

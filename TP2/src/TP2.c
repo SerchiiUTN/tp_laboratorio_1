@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include "ArrayEmployees.h"
 #include "utn.h"
-#define TAMEMPLEADOS 5
+#define TAMEMPLEADOS 100
 
 //define isEmpty
 #define EMPTY 0
@@ -22,19 +22,14 @@
 
 int main(void) {
 	setbuf(stdout,NULL);
-	Employee empleados[TAMEMPLEADOS]; /*=
-			{
-				{1,"Carlos","Lopez",15000,1,FULL},
-				{2,"Alejandra","Martinez",20000,3,FULL},
-				{3,"Ricardo","Rojas",40000,4,FULL}
-			};*/
+	Employee empleados[TAMEMPLEADOS];
 	int retornoAuxiliar;
 	int ultimoEmpleado;
 	int opcion;
 
 	ultimoEmpleado = 0;
 
-	//printEmployees(empleados, TAMEMPLEADOS);
+	initEmployees(empleados, TAMEMPLEADOS);
 
 
 
@@ -122,7 +117,55 @@ int main(void) {
 				}
 			break;
 			case 4:
-				printf("\nOpcion 4\n\n");
+				if(VerificarListaEmpleados(empleados, TAMEMPLEADOS) != 1)
+				{
+					printf("\nNo hay empleados cargados\n\n");
+				}
+				else
+				{
+					printf("\nInformes : \n");
+					printf("1 - Ordenar empleados por Apellido y Sector\n");
+					printf("2 - Informes de salarios (Total, promedio y cuantos superan el promedio\n");
+					printf("3 - Cancelar\n\n");
+
+					utn_PedirEntero(&opcion,"Escoja una opcion: ","Opcion incorrecta, ingrese una opcion valida\n",1,3,0);
+
+					switch(opcion)
+					{
+						case 1:
+							retornoAuxiliar = OrdenarEmpleados(empleados, TAMEMPLEADOS);
+
+							if(retornoAuxiliar == 0)
+							{
+								printf("\nNo se pudo ordenar a los empleados\n\n");
+							}
+							else
+							{
+								printf("\nLista Ordenada : \n");
+								printEmployees(empleados, TAMEMPLEADOS);
+							}
+						break;
+						case 2:
+							retornoAuxiliar = InformarTotalPromedioYSalariosMasAltos(empleados, TAMEMPLEADOS);
+
+							if(retornoAuxiliar == 0)
+							{
+								printf("\nNo se pudo realizar el informe\n\n");
+							}
+							else
+							{
+								if(retornoAuxiliar == -1)
+								{
+									printf("\nLos empleados trabajan gratis (o en negro)\n\n");
+								}
+							}
+						break;
+						case 3:
+							printf("\nOperacion Cancelada\n\n");
+						break;
+					}
+				}
+
 			break;
 			case 0:
 				printf("\n¡Hasta luego!\n\n");
