@@ -584,15 +584,11 @@ LinkedList* ll_clone(LinkedList* this)
     {
     	len = ll_len(this);
 
-    	if(len != -1)
-    	{
-    		cloneArray = this;
+		if(len > 0)
+		{
+			cloneArray = ll_subList(this,0,len);
+		}
 
-    		if(len > 0)
-    		{
-    			cloneArray = ll_subList(this,0,len);
-    		}
-    	}
     }
 
     return cloneArray;
@@ -608,7 +604,7 @@ LinkedList* ll_clone(LinkedList* this)
  */
 int ll_sort(LinkedList* this, int (*pFunc)(void* ,void*), int order)
 {
-    int returnAux =-1;
+    int returnAux = -1;
     void* pElement;
     void* pElement2;
     int len;
@@ -619,51 +615,28 @@ int ll_sort(LinkedList* this, int (*pFunc)(void* ,void*), int order)
         len = ll_len(this);
         if(len != -1)
         {
-            if(order == 0)
-            {
-                for(int i = 0; i < len - 1; i++)
-                {
-                    for(int j = i+1; j < len; j++)
-                    {
-                        pElement = ll_get(this,i);
-                        pElement2 = ll_get(this,j);
+			for(int i = 0; i < len - 1; i++)
+			{
+				for(int j = i+1; j < len; j++)
+				{
+					pElement = ll_get(this,i);
+					pElement2 = ll_get(this,j);
 
-                        valida = pFunc(pElement,pElement2);
+					valida = pFunc(pElement,pElement2);
 
-                        if(valida == -1)
-                        {
-                            ll_set(this, i, pElement2);
-                            ll_set(this, j, pElement);
-                        }
-                    }
-                }
-            }
-            else if (order == 1)
-            {
-                for(int i = 0; i < len - 1; i++)
-                {
-                    for(int j = i+1; j < len; j++)
-                    {
-                        pElement = ll_get(this,i);
-                        pElement2 = ll_get(this,j);
-
-                        valida = pFunc(pElement,pElement2);
-
-                        if(valida == 1)
-                        {
-                            ll_set(this, i, pElement2);
-                            ll_set(this, j, pElement);
-                        }
-                    }
-                }
-            }
+					if((valida == -1 && order == 0) || (valida == 1 && order == 1))
+					{
+						ll_set(this, i, pElement2);
+						ll_set(this, j, pElement);
+					}
+				}
+			}
 
             returnAux = 0;
         }
     }
 
     return returnAux;
-
 
 }
 

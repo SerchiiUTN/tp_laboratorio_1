@@ -173,9 +173,10 @@ void employee_showEmployee(Employee* employee)
 	int horas;
 	char nombre[32];
 
-	if (employee != NULL)
+	if(employee != NULL)
 	{
 		employee_getId(employee, &id);
+		printf("%4d",id);
 
 		employee_getNombre(employee, nombre);
 
@@ -183,7 +184,7 @@ void employee_showEmployee(Employee* employee)
 
 		employee_getSueldo(employee, &sueldo);
 
-		printf("%-5d - %-32s - %-5d - %d \n", id, nombre, horas, sueldo);
+		printf(" - %-32s - %-5d - %d \n", nombre, horas, sueldo);
 
 	}
 
@@ -225,7 +226,7 @@ int employee_addEmployeesToTextFile(FILE* pArch, LinkedList* pArrayListEmployee)
 		for(i = 0; i < len; i++)
 		{
 			employee = (Employee*) ll_get(pArrayListEmployee, i);
-			if (employee == NULL)
+			if(employee == NULL)
 			{
 				break;
 			}
@@ -263,7 +264,7 @@ int employee_addEmployeesToBinaryFile(FILE* pArch, LinkedList* pArrayListEmploye
 		{
 			pEmpleado = (Employee*) ll_get(pArrayListEmployee, i);
 
-			if (pEmpleado == NULL)
+			if(pEmpleado == NULL)
 			{
 				break;
 			}
@@ -271,7 +272,7 @@ int employee_addEmployeesToBinaryFile(FILE* pArch, LinkedList* pArrayListEmploye
 			fwrite(pEmpleado, sizeof(Employee), 1, pArch);
 		}
 
-		if (i == len)
+		if(i == len)
 		{
 			retorno = 0;
 		}
@@ -300,7 +301,7 @@ int employee_listEmployees(LinkedList* pArrayListEmployee)
 		{
 			pEmpleado = (Employee*) ll_get(pArrayListEmployee, i);
 
-			if (pEmpleado == NULL)
+			if(pEmpleado == NULL)
 			{
 				break;
 			}
@@ -361,8 +362,7 @@ int employee_CompareById(void* pEmp1, void* pEmp2)
 	int idDos;
 	Employee* pEmpleado1;
 	Employee* pEmpleado2;
-	pEmpleado1 = (Employee*) pEmp1;
-	pEmpleado2 = (Employee*) pEmp2;
+
 	retorno = -2;
 
 	if(pEmp1 != NULL && pEmp2 != NULL)
@@ -415,10 +415,6 @@ Employee* employee_AddNewEmployee(int ultimoId)
 }
 
 
-
-//----------------------------------
-
-
 int employee_editEmployee(LinkedList* pArrayListEmployee, Employee* pEmp, Employee* pAux)
 {
 	int retorno;
@@ -426,46 +422,61 @@ int employee_editEmployee(LinkedList* pArrayListEmployee, Employee* pEmp, Employ
 	char nombre[128];
 	int auxInt;
 	int confirmacion;
+
 	retorno = -1;
 
-	if (pArrayListEmployee != NULL && pEmp != NULL && pAux != NULL) {
+	if(pArrayListEmployee != NULL && pEmp != NULL && pAux != NULL)
+	{
 		opcion = employee_Options();
 
-		switch(opcion) {
+		switch(opcion)
+		{
 		case 1:
 			retorno = utn_PedirNombreOApellido(nombre, sizeof(nombre), "Ingrese el nuevo nombre del empleado: ", "ERROR. Ingrese el nuevo nombre del empleado: ", 2);
-			if (retorno == 1) {
+
+			if(retorno == 1)
+			{
 				employee_setNombre(pAux, nombre);
 			}
 			break;
+
 		case 2:
 			retorno = utn_PedirEntero(&auxInt, "Ingrese la nueva cantidad de horas trabajadas: ", "ERROR. Ingrese la nueva cantidad de horas trabajadas (mayor que 0): ", 0, 20000000, 2);
-			if (retorno == 1) {
+
+			if(retorno == 1)
+			{
 				retorno = employee_setHorasTrabajadas(pAux, auxInt);
 			}
 			break;
 		case 3:
 			retorno = utn_PedirEntero(&auxInt, "Ingrese el nuevo sueldo del trabajador (entero): ","ERROR. Ingrese el nuevo sueldo del trabajador (entero y mayor que cero): ", 1, 20000000, 2);
-			if (retorno == 1) {
+			if(retorno == 1) {
 				retorno = employee_setSueldo(pAux, auxInt);
 			}
 			break;
 		}
 
-		if (retorno == 1) {
+		if(retorno == 1)
+		{
 			retorno = utn_PedirEntero(&confirmacion, "¿Seguro que desea realizar esta modificacion?\n1.Si\n2.No\nRespuesta: ", "ERROR.",1,2, 2);
-			if (retorno == 1 && confirmacion == 1)
+			if(retorno == 1 && confirmacion == 1)
 			{
 				auxInt = ll_indexOf(pArrayListEmployee, pEmp);
 				retorno = ll_set(pArrayListEmployee, auxInt, pEmp);
-			} else {
-				if (confirmacion == 2) {
+			}
+			else
+			{
+				if(confirmacion == 2) {
 					retorno = -2;
-				} else {
+				}
+				else
+				{
 					retorno = -1;
 				}
 			}
-		} else {
+		}
+		else
+		{
 			retorno = -1;
 		}
 	}
@@ -496,18 +507,22 @@ int employee_removeEmployee(LinkedList* pArrayListEmployee, Employee* employee, 
 	int confirmacion;
 	retorno = -1;
 
-	if (pArrayListEmployee != NULL && employee != NULL) {
+	if(pArrayListEmployee != NULL && employee != NULL)
+	{
 		printf("--Empleado a eliminar--\n");
 		printf("ID   - Nombre                          - HorasTrabajadas - Sueldo\n");
+
 		employee_showEmployee(employee);
+
 		retorno = utn_PedirEntero(&confirmacion, "¿Seguro que desea realizar esta modificacion?\n1.Si\n2.No\nRespuesta: ", "ERROR.",1,2, 2);
+
 		if(retorno == 1 && confirmacion == 1)
 		{
 			retorno = ll_remove(pArrayListEmployee, index);
 		}
 		else
 		{
-			if (confirmacion == 2)
+			if(confirmacion == 2)
 			{
 				retorno = -2;
 			}
@@ -531,10 +546,11 @@ Employee* employee_copyEmployeeToEmployeeAux(Employee* employee)
 
 	pAux = NULL;
 
-	if (employee != NULL)
+	if(employee != NULL)
 	{
 		pAux = employee_new();
-		if (pAux != NULL)
+
+		if(pAux != NULL)
 		{
 			employee_getId(employee, &id);
 			employee_getNombre(employee, nombre);

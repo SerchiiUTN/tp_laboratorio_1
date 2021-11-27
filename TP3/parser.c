@@ -5,34 +5,50 @@
 int parser_EmployeeFromText(FILE* pFile , LinkedList* pArrayListEmployee)
 {
 	int retorno;
+	int ultimoID;
 	char idStr[100];
 	char nombreStr[128];
 	char horasTrabajadasStr[100];
 	char sueldoStr[100];
 	int rta;
 	Employee* employee;
+
 	retorno = -1;
 
-	if (pFile != NULL && pArrayListEmployee != NULL) {
+
+	if(pFile != NULL && pArrayListEmployee != NULL)
+	{
 		fscanf(pFile, "%[^,],%[^,],%[^,],%[^\n]\n", idStr, nombreStr, horasTrabajadasStr, sueldoStr);
-	    while(!feof(pFile)) {
+	    while(!feof(pFile))
+	    {
 	    	rta = fscanf(pFile, "%[^,],%[^,],%[^,],%[^\n]\n", idStr, nombreStr, horasTrabajadasStr, sueldoStr);
-	    	if (rta != 4) {
+
+	    	if(rta != 4)
+	    	{
 	    		retorno = -1;
 	    		break;
 	    	}
+
+
 			employee = employee_newParametros(idStr, nombreStr, horasTrabajadasStr, sueldoStr);
-			if (employee == NULL) {
+			if(employee == NULL)
+			{
 				retorno = -1;
 				break;
 			}
 			retorno = ll_add(pArrayListEmployee, employee);
-			if (retorno != 0) {
+			if(retorno != 0)
+			{
 				employee_delete(employee);
 				retorno = -1;
 				break;
 			}
 	    }
+
+	    ultimoID = atoi(idStr);
+
+	    employee_saveID(ultimoID);
+
 	}
 
     return retorno;
@@ -41,21 +57,29 @@ int parser_EmployeeFromText(FILE* pFile , LinkedList* pArrayListEmployee)
 int parser_EmployeeFromBinary(FILE* pFile , LinkedList* pArrayListEmployee)
 {
 	int retorno;
+	int len;
+	int ultimoID;
 	int rta;
 	Employee* pEmpleado;
+
 	retorno = -1;
 
-	if (pFile != NULL && pArrayListEmployee != NULL)
+	if(pFile != NULL && pArrayListEmployee != NULL)
 	{
-	    while(!feof(pFile)) {
+	    while(!feof(pFile))
+	    {
 	    	pEmpleado = employee_new();
-	    	if (pEmpleado == NULL) {
+
+	    	if(pEmpleado == NULL)
+	    	{
 	    		retorno = -1;
+
 	    		break;
 	    	}
+
 	    	rta = fread(pEmpleado, sizeof(Employee), 1, pFile);
 
-	    	if (rta != 1)
+	    	if(rta != 1)
 	    	{
 	    		if (feof(pFile))
 	    		{
@@ -65,8 +89,11 @@ int parser_EmployeeFromBinary(FILE* pFile , LinkedList* pArrayListEmployee)
 	    		{
 		    		retorno = -1;
 	    		}
+
 	    		break;
+
 	    	}
+
 	    	retorno = ll_add(pArrayListEmployee, pEmpleado);
 
 	    	if(retorno != 0)
@@ -75,6 +102,15 @@ int parser_EmployeeFromBinary(FILE* pFile , LinkedList* pArrayListEmployee)
 	    		break;
 	    	}
 	    }
+
+	    len = ll_len(pArrayListEmployee);
+
+	    pEmpleado = (Employee*) ll_get(pArrayListEmployee,len-1);
+
+	    employee_getId(pEmpleado,&ultimoID);
+
+	    employee_saveID(ultimoID);
+
 	}
 
     return retorno;
